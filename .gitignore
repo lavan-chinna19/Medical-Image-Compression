@@ -39,6 +39,8 @@ results/*
 !results/mask_report.csv
 !results/baselines.csv
 !results/baseline_summary.csv
+!results/dct_results.csv
+!results/dct_summary.csv
 !results/plots/
 !results/plots/*
 data/raw/*

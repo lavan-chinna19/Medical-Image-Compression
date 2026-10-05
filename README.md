@@ -13,6 +13,8 @@ medcomp/
 │   ├── io_utils.py      # Image I/O (PNG, JPG, BMP, TIFF, DICOM) and padding/crop helpers
 │   ├── mask_utils.py    # Binary mask loader, merger, NN-resizer, ROI fraction, bounding box
 │   ├── preprocess.py    # Resizes image/ROI pairs to 512x512 with anti-aliasing & alignment
+│   ├── entropy.py       # Scratch BitWriter, BitReader, Canonical Huffman, table serialization
+│   ├── dct_codec.py     # Custom 8x8 block DCT codec with adaptive Huffman entropy coding
 │   ├── baselines.py     # In-memory JPEG, JPEG2000, and PNG baseline codecs
 │   ├── metrics.py       # Quality (MSE, PSNR, SSIM, Masked PSNR) and rate metrics (CR, bpp, Entropy)
 │   └── config.py        # Project paths and configuration constants (TARGET_SIZE=512)
@@ -24,16 +26,22 @@ medcomp/
 │   ├── prepare_masks.py # Preprocesses masks, logs warnings, creates previews & CSV report
 │   ├── preprocess_all.py# Batch resizes raw images and masks to standardized 512x512
 │   ├── run_baselines.py # Benchmarks JPEG, JPEG2000, and PNG across multiple rate points
-│   └── plot_baselines.py# Generates RD curves (PSNR, SSIM, ROI PSNR) and summary CSV
+│   ├── plot_baselines.py# Generates RD curves (PSNR, SSIM, ROI PSNR) and summary CSV
+│   ├── run_dct.py       # Benchmarks custom DCT codec across [10, 20, 30, 50, 70, 90]
+│   └── plot_dct_vs_baselines.py # Comparative RD plots (Custom DCT vs JPEG vs JPEG2000)
 ├── tests/
 │   ├── test_metrics.py  # Unit tests for PSNR, SSIM, Entropy, Lossless checks, Masked PSNR
 │   ├── test_mask_utils.py # Unit tests for mask merging, resizing, bbox, ROI fraction
 │   ├── test_baselines.py# Unit tests for baseline codecs, bit-exactness, rate monotonicity
+│   ├── test_entropy.py  # Unit tests for BitWriter/Reader, Canonical Huffman, H <= L < H+1
+│   ├── test_dct_codec.py# Unit tests for custom DCT codec, bit-exact decode, Q-scaling
 │   └── test_io_utils.py # Unit tests for format loading, DICOM windowing, pad/unpad
 ├── results/             # Compression output artifacts, mask previews, and evaluation reports
-│   ├── plots/           # Rate-distortion curves (rd_curve_psnr, rd_curve_ssim, rd_curve_roi_psnr)
-│   ├── baselines.csv    # Raw benchmark data (444 evaluation runs across 37 images)
-│   ├── baseline_summary.csv # Mean rate-distortion and execution time table
+│   ├── plots/           # Rate-distortion curves (including rd_dct_vs_baselines_psnr/ssim)
+│   ├── baselines.csv    # Raw baseline benchmark data (444 evaluation runs)
+│   ├── baseline_summary.csv # Mean baseline rate-distortion table
+│   ├── dct_results.csv  # Detailed custom DCT runs across all images and qualities
+│   ├── dct_summary.csv  # Mean rate-distortion and entropy stats by quality
 │   ├── mask_previews/   # Image overlays with ROI boundary outlined in red
 │   └── mask_report.csv  # Summary report of all images and masks
 ├── pytest.ini           # Pytest test configuration
@@ -114,17 +122,37 @@ pytest tests/test_io_utils.py -v
 - `masked_psnr(orig, recon, mask, region="roi"|"background")`: Region-specific PSNR.
 - `is_lossless(orig, recon, mask=None)`: Strict exact equality check across the entire image or restricted to an ROI mask.
 
+### `medcomp.entropy`
+- `BitWriter`: Accumulates individual bits and writes padded byte buffers.
+- `BitReader`: Reads arbitrary bit lengths from raw byte arrays.
+- `build_huffman_code_lengths(freqs)`: Constructs optimal prefix code lengths via `heapq` (single-symbol handled as length 1).
+- `canonical_codes(lengths)`: Deterministic canonical Huffman code generator.
+- `huffman_encode` & `huffman_decode`: Full bitstream encoding and fast trie-based decoding.
+- `average_code_length` & `shannon_entropy_from_freqs`: Shannon entropy theorem verifier ($H \le L < H + 1$).
+- `serialize_code_lengths` & `deserialize_code_lengths`: Compact table serialization (2 bytes + 2 bytes per symbol).
+
+### `medcomp.dct_codec`
+- `dct_encode(img, quality=50, q_table=None)`: Vectorized 8x8 block DCT (`scipy.fft.dctn`), standard IJG quantization scaling, differential DC coding, zigzag scan, run-length AC coding with amplitude categories, adaptive canonical Huffman tables, and compact header assembly.
+- `dct_decode(data, q_table=None)`: Bitstream header parsing, canonical Huffman table reconstruction, block dequantization, 2D IDCT, and exact image cropping.
+- `get_quantization_table(quality)`: Scaled JPEG luminance quantization matrix.
+
 ---
 
-## Mask Preparation Pipeline
+## Pipelines & Benchmark Scripts
 
-To prepare merged masks, generate preview overlays, and produce the summary report:
-
+### 1. Preprocess Dataset (512x512)
 ```powershell
-python scripts/prepare_masks.py
+python scripts/preprocess_all.py
 ```
 
-This outputs:
-- Merged binary masks in `data/masks/roi/<image_name>.png` (values 0 and 255)
-- Visual previews in `results/mask_previews/<stem>_preview.png` (with ROI outline in red)
-- Detailed validation report in `results/mask_report.csv`
+### 2. Run Baseline Codecs (JPEG, JPEG2000, PNG)
+```powershell
+python scripts/run_baselines.py
+python scripts/plot_baselines.py
+```
+
+### 3. Run Custom DCT Codec & Comparative Analysis
+```powershell
+python scripts/run_dct.py
+python scripts/plot_dct_vs_baselines.py
+```

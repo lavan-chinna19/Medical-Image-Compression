@@ -22,6 +22,8 @@ MASK_PREVIEWS_DIR = RESULTS_DIR / "mask_previews"
 MASK_REPORT_PATH = RESULTS_DIR / "mask_report.csv"
 BASELINES_CSV_PATH = RESULTS_DIR / "baselines.csv"
 BASELINE_SUMMARY_CSV_PATH = RESULTS_DIR / "baseline_summary.csv"
+DCT_RESULTS_CSV_PATH = RESULTS_DIR / "dct_results.csv"
+DCT_SUMMARY_CSV_PATH = RESULTS_DIR / "dct_summary.csv"
 PLOTS_DIR = RESULTS_DIR / "plots"
 
 # Supported image file extensions

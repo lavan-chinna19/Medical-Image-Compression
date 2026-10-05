@@ -12,6 +12,8 @@ from .config import (
     DATA_PROCESSED_IMAGES_DIR,
     DATA_PROCESSED_MASKS_DIR,
     DATA_RAW_DIR,
+    DCT_RESULTS_CSV_PATH,
+    DCT_SUMMARY_CSV_PATH,
     DEFAULT_BLOCK_SIZE,
     MASKS_ROI_DIR,
     MASK_PREVIEWS_DIR,
@@ -20,6 +22,22 @@ from .config import (
     RESULTS_DIR,
     SUPPORTED_EXTENSIONS,
     TARGET_SIZE,
+)
+from .dct_codec import (
+    dct_decode,
+    dct_encode,
+    dct_encode_with_stats,
+    get_quantization_table,
+)
+from .entropy import (
+    BitReader,
+    BitWriter,
+    average_code_length,
+    build_huffman_code_lengths,
+    canonical_codes,
+    huffman_decode,
+    huffman_encode,
+    shannon_entropy_from_freqs,
 )
 from .io_utils import crop_to_shape, list_images, load_image, pad_to_multiple, save_image
 from .mask_utils import (
@@ -42,7 +60,7 @@ from .metrics import (
 )
 from .preprocess import load_pair
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "TARGET_SIZE",
@@ -57,6 +75,8 @@ __all__ = [
     "MASK_REPORT_PATH",
     "BASELINES_CSV_PATH",
     "BASELINE_SUMMARY_CSV_PATH",
+    "DCT_RESULTS_CSV_PATH",
+    "DCT_SUMMARY_CSV_PATH",
     "PLOTS_DIR",
     "SUPPORTED_EXTENSIONS",
     "DEFAULT_BLOCK_SIZE",
@@ -75,6 +95,18 @@ __all__ = [
     "jpeg_codec",
     "jpeg2000_codec",
     "png_codec",
+    "dct_encode",
+    "dct_decode",
+    "dct_encode_with_stats",
+    "get_quantization_table",
+    "BitWriter",
+    "BitReader",
+    "build_huffman_code_lengths",
+    "canonical_codes",
+    "huffman_encode",
+    "huffman_decode",
+    "average_code_length",
+    "shannon_entropy_from_freqs",
     "mse",
     "psnr",
     "ssim",
