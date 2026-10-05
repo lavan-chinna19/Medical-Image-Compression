@@ -12,21 +12,28 @@ medcomp/
 │   ├── __init__.py      # Package exports and version
 │   ├── io_utils.py      # Image I/O (PNG, JPG, BMP, TIFF, DICOM) and padding/crop helpers
 │   ├── mask_utils.py    # Binary mask loader, merger, NN-resizer, ROI fraction, bounding box
+│   ├── preprocess.py    # Resizes image/ROI pairs to 512x512 with anti-aliasing & alignment
+│   ├── baselines.py     # In-memory JPEG, JPEG2000, and PNG baseline codecs
 │   ├── metrics.py       # Quality (MSE, PSNR, SSIM, Masked PSNR) and rate metrics (CR, bpp, Entropy)
-│   └── config.py        # Project paths and configuration constants
+│   └── config.py        # Project paths and configuration constants (TARGET_SIZE=512)
 ├── data/
 │   ├── raw/             # Raw input medical images (place .dcm, .png, etc. here)
-│   └── masks/           # Anatomical masks
-│       ├── leftmask/    # Left lung masks
-│       ├── rightmask/   # Right lung masks
-│       └── roi/         # Generated merged ROI masks (0 and 255)
+│   ├── masks/           # Anatomical masks (leftmask/, rightmask/, and merged roi/)
+│   └── processed/       # Standardized 512x512 dataset (images/ and masks/)
 ├── scripts/
-│   └── prepare_masks.py # Preprocesses masks, logs warnings, creates previews & CSV report
+│   ├── prepare_masks.py # Preprocesses masks, logs warnings, creates previews & CSV report
+│   ├── preprocess_all.py# Batch resizes raw images and masks to standardized 512x512
+│   ├── run_baselines.py # Benchmarks JPEG, JPEG2000, and PNG across multiple rate points
+│   └── plot_baselines.py# Generates RD curves (PSNR, SSIM, ROI PSNR) and summary CSV
 ├── tests/
 │   ├── test_metrics.py  # Unit tests for PSNR, SSIM, Entropy, Lossless checks, Masked PSNR
 │   ├── test_mask_utils.py # Unit tests for mask merging, resizing, bbox, ROI fraction
+│   ├── test_baselines.py# Unit tests for baseline codecs, bit-exactness, rate monotonicity
 │   └── test_io_utils.py # Unit tests for format loading, DICOM windowing, pad/unpad
 ├── results/             # Compression output artifacts, mask previews, and evaluation reports
+│   ├── plots/           # Rate-distortion curves (rd_curve_psnr, rd_curve_ssim, rd_curve_roi_psnr)
+│   ├── baselines.csv    # Raw benchmark data (444 evaluation runs across 37 images)
+│   ├── baseline_summary.csv # Mean rate-distortion and execution time table
 │   ├── mask_previews/   # Image overlays with ROI boundary outlined in red
 │   └── mask_report.csv  # Summary report of all images and masks
 ├── pytest.ini           # Pytest test configuration

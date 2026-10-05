@@ -37,8 +37,14 @@ htmlcov/
 results/*
 !results/.gitkeep
 !results/mask_report.csv
+!results/baselines.csv
+!results/baseline_summary.csv
+!results/plots/
+!results/plots/*
 data/raw/*
 !data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
 
 # IDEs & OS
 .vscode/
