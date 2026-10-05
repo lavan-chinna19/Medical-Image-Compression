@@ -1,0 +1,37 @@
+"""Configuration module for paths, supported image extensions, and project constants."""
+
+from pathlib import Path
+
+# Project root directory (3 levels up from src/medcomp/config.py: src/medcomp -> src -> root)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+# Data directories
+DATA_DIR = PROJECT_ROOT / "data"
+DATA_RAW_DIR = DATA_DIR / "raw"
+DATA_PROCESSED_DIR = DATA_DIR / "processed"
+DATA_MASKS_DIR = DATA_DIR / "masks"
+MASKS_LEFT_DIR = DATA_MASKS_DIR / "leftmask"
+MASKS_RIGHT_DIR = DATA_MASKS_DIR / "rightmask"
+MASKS_ROI_DIR = DATA_MASKS_DIR / "roi"
+
+# Results directories and report paths
+RESULTS_DIR = PROJECT_ROOT / "results"
+MASK_PREVIEWS_DIR = RESULTS_DIR / "mask_previews"
+MASK_REPORT_PATH = RESULTS_DIR / "mask_report.csv"
+
+# Supported image file extensions
+SUPPORTED_EXTENSIONS = (
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".bmp",
+    ".tif",
+    ".tiff",
+    ".dcm",
+)
+
+# Standard DCT block dimension
+DEFAULT_BLOCK_SIZE = 8
+
+# Default peak value for 8-bit grayscale images
+DEFAULT_DATA_RANGE = 255.0
