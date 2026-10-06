@@ -96,6 +96,31 @@ class BitReader:
         return self._pos
 
 
+def compute_category(val: int) -> int:
+    """Determine the JPEG magnitude category (number of bits needed for amplitude)."""
+    if val == 0:
+        return 0
+    return abs(val).bit_length()
+
+
+def encode_amplitude(val: int, size: int) -> int:
+    """Encode an integer difference into its JPEG standard ones' complement representation."""
+    if size == 0:
+        return 0
+    if val > 0:
+        return val
+    return val + (1 << size) - 1
+
+
+def decode_amplitude(code_val: int, size: int) -> int:
+    """Decode a JPEG ones' complement amplitude value back to a signed integer."""
+    if size == 0:
+        return 0
+    if code_val >= (1 << (size - 1)):
+        return code_val
+    return code_val - (1 << size) + 1
+
+
 def build_huffman_code_lengths(freqs: dict[int, int]) -> dict[int, int]:
     """Build optimal Huffman code lengths from symbol frequencies using heapq.
 

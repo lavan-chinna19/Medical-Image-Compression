@@ -1,0 +1,19 @@
+============================================================
+MONTGOMERY DATASET METADATA & CROSS-VALIDATION SUMMARY
+============================================================
+Total images:          138
+Unique patient IDs:    138
+Patient ID duplicates: None (1 image per patient)
+Label disagreements:   0
+
+CLASS DISTRIBUTION (OVERALL):
+  Normal (Label 0):    80 (58.0%)
+  TB     (Label 1):    58 (42.0%)
+
+CROSS-VALIDATION FOLDS (5-fold Stratified):
+  Fold 0: Total=28 | Normal (0)=16 | TB (1)=12 (42.9% TB)
+  Fold 1: Total=28 | Normal (0)=16 | TB (1)=12 (42.9% TB)
+  Fold 2: Total=28 | Normal (0)=16 | TB (1)=12 (42.9% TB)
+  Fold 3: Total=27 | Normal (0)=16 | TB (1)=11 (40.7% TB)
+  Fold 4: Total=27 | Normal (0)=16 | TB (1)=11 (40.7% TB)
+============================================================

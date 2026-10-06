@@ -41,6 +41,10 @@ results/*
 !results/baseline_summary.csv
 !results/dct_results.csv
 !results/dct_summary.csv
+!results/dwt_results.csv
+!results/dwt_summary.csv
+!results/dwt_ablation.csv
+!results/metadata_summary.txt
 !results/plots/
 !results/plots/*
 data/raw/*

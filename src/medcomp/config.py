@@ -15,6 +15,8 @@ DATA_MASKS_DIR = DATA_DIR / "masks"
 MASKS_LEFT_DIR = DATA_MASKS_DIR / "leftmask"
 MASKS_RIGHT_DIR = DATA_MASKS_DIR / "rightmask"
 MASKS_ROI_DIR = DATA_MASKS_DIR / "roi"
+DATA_READINGS_DIR = DATA_DIR / "readings"
+METADATA_CSV_PATH = DATA_DIR / "metadata.csv"
 
 # Results directories and report paths
 RESULTS_DIR = PROJECT_ROOT / "results"
@@ -24,6 +26,10 @@ BASELINES_CSV_PATH = RESULTS_DIR / "baselines.csv"
 BASELINE_SUMMARY_CSV_PATH = RESULTS_DIR / "baseline_summary.csv"
 DCT_RESULTS_CSV_PATH = RESULTS_DIR / "dct_results.csv"
 DCT_SUMMARY_CSV_PATH = RESULTS_DIR / "dct_summary.csv"
+DWT_RESULTS_CSV_PATH = RESULTS_DIR / "dwt_results.csv"
+DWT_SUMMARY_CSV_PATH = RESULTS_DIR / "dwt_summary.csv"
+DWT_ABLATION_CSV_PATH = RESULTS_DIR / "dwt_ablation.csv"
+METADATA_SUMMARY_PATH = RESULTS_DIR / "metadata_summary.txt"
 PLOTS_DIR = RESULTS_DIR / "plots"
 
 # Supported image file extensions
